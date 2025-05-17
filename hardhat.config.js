@@ -12,15 +12,15 @@ module.exports = {
   solidity: "0.8.28",
   networks: {
     sepolia: {
-      url: SEPOLIA_URL,//Alchemy API URL
+      url: "https://ethereum-sepolia.publicnode.com",//SEPOLIA_URL,//Alchemy API URL
       accounts:[PRIVATE_KEY,PRIVATE_KEY_1],
       chainId: 11155111,
     },
-    etherscan:{
+  },
+  etherscan:{
       apiKey:{
         sepolia: ETHERSCAN_API_KEY
       }
     }
-  }
 }
 

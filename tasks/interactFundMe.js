@@ -1,8 +1,8 @@
 const {task} = require("hardhat/config");
 
-task("interactFundMe","Interact with fundme contract").
-addParam("addr", "The contract address")
-setAction(async (taskArgs, hre) => {
+task("interactFundMe","Interact with fundme contract")
+.addParam("addr", "The contract address")
+.setAction(async (taskArgs, hre) => {
 
     const fundMeFactory = await ethers.getContractFactory("FundMe");
     const fundMe = await fundMeFactory.attach(taskArgs.addr);
@@ -26,3 +26,5 @@ setAction(async (taskArgs, hre) => {
         console.log(`First account balance in FundMe contract is ${firstAccountBalanceinFundme}`);
         console.log(`Second account balance in FundMe contract is ${secondAccountBalanceinFundme}`);
 })
+
+module.exports = {}
