@@ -1,35 +1,28 @@
-const {task} = require("hardhat/config");
+const { task } = require("hardhat/config")
 
+task("deployFundMe", "deploy and verify fundme conract").setAction(async(taskArgs, hre) => {
+    // create factory 
+    const fundMeFactory = await ethers.getContractFactory("FundMe")
+    console.log("contract deploying")
+    // deploy contract from factory
+    const fundMe = await fundMeFactory.deploy(300)
+    await fundMe.waitForDeployment()
+    console.log(`contract has been deployed successfully, contract address is ${fundMe.target}`);
 
-task("deployFundMe").setAction(async (taskArgs, hre) => {
-    //create factory
-    const fundMeFactory = await ethers.getContractFactory("FundMe");
-    console.log("Deploying FundMe contract...")
-    //deploy contract from factory
-    const fundMe = await fundMeFactory.deploy(300);
-    await fundMe.waitForDeployment();// wait for the contract to be deployed
-    console.log(`Contract has been deployed successfully, Contract addresss is ${fundMe.target}`);
-
-    //verify contract on etherscan
-    if (hre.network.config.chainId === 11155111 && process.env.ETHERSCAN_API_KEY){
-        
-        console.log("Waiting for 5 blocks to confirm the transaction...")
-        fundMe.deploymentTransaction().wait(5)
-        await verifyContract(fundMe.target,300);
-        console.log("Contract verified successfully!")
-    } else{
-        console.log("Contract skipped.")
+    // verify fundme
+    if(hre.network.config.chainId == 11155111 && process.env.ETHERSCAN_API_KEY) {
+        console.log("Waiting for 5 confirmations")
+        await fundMe.deploymentTransaction().wait(5) 
+        await verifyFundMe(fundMe.target, [300])
+    } else {
+        console.log("verification skipped..")
     }
-})
+} )
 
-
-async function verifyContract(FundMeAddr, args){
-
+async function verifyFundMe(fundMeAddr, args) {
     await hre.run("verify:verify", {
-        address: FundMeAddr,
-        constructorArguments: [
-            args,
-        ],
+        address: fundMeAddr,
+        constructorArguments: args,
       });
 }
 
